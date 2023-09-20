@@ -1,4 +1,7 @@
-from langchain.prompts import PromptTemplate, StringPromptTemplate
+from langchain.prompts import PromptTemplate
+from langchain.memory import ConversationBufferWindowMemory
+from langchain.vectorstores import Chroma
+import yaml
 
 
 class ChatPromptTemplate():

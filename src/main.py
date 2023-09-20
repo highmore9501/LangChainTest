@@ -3,10 +3,7 @@ from promptTemplates.chatPromptTemplate import ChatPromptTemplate
 from langchain.memory import ConversationBufferWindowMemory
 from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.vectorstores import Chroma
-from langchain.llms import OpenAI
-from langchain.chains import VectorDBQA
 from selectCharacter import selectCharacter
-import yaml
 from modelLoaders.huggingFaceLoader import HuggingFaceLaoder
 from transformers import pipeline
 from langchain import HuggingFacePipeline
