@@ -1,13 +1,13 @@
 import yaml
 
-character_List = ['神里绫华']
+character_List = ['神里绫华', '韦小宝']
 
 
 def selectCharacter():
     character_name = None
 
     while character_name is None:
-        character_index = input(f"请选择你想聊天的角色名\n1. 神里绫华\n")
+        character_index = input(f"请选择你想聊天的角色名\n1. 神里绫华\n2. 韦小宝\n")
         # 如果输入的是整数，而且在角色列表中
         if character_index.isdigit() and int(character_index) <= len(character_List):
             character_name = character_List[int(character_index) - 1]

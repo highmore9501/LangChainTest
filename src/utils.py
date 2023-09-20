@@ -34,4 +34,4 @@ def generate_character_feature_chats(character_name: str):
 
 
 if __name__ == "__main__":
-    generate_character_feature_chats("神里绫华")
+    generate_character_feature_chats("韦小宝")
