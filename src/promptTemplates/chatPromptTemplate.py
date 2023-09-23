@@ -11,15 +11,16 @@ class ChatPromptTemplate():
     recent_chat_contents_max_tokens: int
     prompt: PromptTemplate
 
-    def __init__(self, memory: ConversationBufferWindowMemory, db: Chroma, featured_chats_max_tokens: int = 1024, recent_chat_contents_max_tokens: int = 1024):
+    def __init__(self, chatType: str, memory: ConversationBufferWindowMemory, db: Chroma, featured_chats_max_tokens: int = 1024, recent_chat_contents_max_tokens: int = 1024):
         self.memory = memory
         self.db = db
         self.featured_chats_max_tokens = featured_chats_max_tokens
         self.recent_chat_contents_max_tokens = recent_chat_contents_max_tokens
         # 加载基础的聊天模板
-        commonChatPromptTemplatePath = "promptTemplates\common-chat.yaml"
+        commonChatPromptTemplatePath = f"promptTemplates\{chatType}.yaml"
         commonChatPromptTemplate = yaml.load(open(
             commonChatPromptTemplatePath, encoding="utf-8"), Loader=yaml.FullLoader)["prompt"]
+        print(commonChatPromptTemplate)
         self.prompt = PromptTemplate.from_template(commonChatPromptTemplate)
 
     def format(self, **kwargs) -> str:
@@ -35,7 +36,12 @@ class ChatPromptTemplate():
         recent_chat_contents = self.format_recent_chat_contents(
             chat_historys, character_name, user_name)
         kwargs["recent_chat_contents"] = recent_chat_contents
-        return self.prompt.format(**kwargs)
+        result = self.format_prompt(**kwargs)
+        # 因为原模板中不能有{...:....}这样的格式，上面的代码会报错，但又需要这样的格式，所以模板用<...:...>代替{...:...}
+        # 然后再用下面的代码将<...:...>替换成{...:...}
+        result = result.replace("<", "{")
+        result = result.replace(">", "}")
+        return result
 
     def query_featured_chats(self, inputText):
         # 查询长期记忆中与输入文本相似的内容，大小不要超过featured_chats_max_tokens
