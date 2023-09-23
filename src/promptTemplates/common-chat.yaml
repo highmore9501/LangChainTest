@@ -1,33 +1,28 @@
 prompt: |-
-  ### 任务
-  有一场{character_name}与{user_name}的对话正在进行，你需要根据下面的背景信息，为{character_name}生成下一句对话内容。只要生成一句话即可，不要生成{character_name}回答以外的任何其它内容。
+  ## 指令
+  下面有一场{character_name}与{user_name}之间的模拟谈话，做为一个ai助手，你需要根据背景信息和聊天记录，决定角色{character_name}接下来的回复内容。
 
-  ### 背景信息
+  ### 对话的背景信息
+  {character_name}的人物介绍：{character_persona}
+  {user_name}的人物介绍：{user_persona}
+  对话的时间：{time}
+  对话的地点：{location}
+  当时周边的环境：{environment}
+  对话双方的关系：{user_name}是{character_name}的{identity}。{relationship_description} 
 
-  #### {character_name}的人设
-  {character_persona}
+  ### 历史聊天记录
+  {featured_chats}  
 
-  #### {user_name}的人设
-  {user_persona}
-
-  #### 对话的时间
-  {time}
-
-  #### 对话的地点
-  {location}
-
-  #### 周边的环境
-  {environment}
-
-  #### 两人的关系
-  {user_name}是{character_name}的{identity} 。{relationship_description} 
-
-  #### 两人之前的一些关系描述以及相关的聊天内容
-  {featured_chats}
-
-  #### 最近的一次聊天内容
+  ### 正在进行的聊天内容
   {recent_chat_contents}
   {user_name}：{nearest_user_chat}
 
-  ### 回答
-  {character_name}：
+  ### 回复方式说明
+  现在需要你根据{user_name}刚刚说的话，模仿{character_name}的语气回复{user_name}的对话。格式如下：
+  <
+      "type":"reply_chat", 
+      "content":回复对话的内容
+  >
+
+  ## 回复
+  现在，你的回复是：
