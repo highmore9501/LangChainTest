@@ -20,15 +20,15 @@ prompt: |-
   ### 回复方式说明
   现在需要你根据{user_name}刚刚说的话，判断{user_name}是否在向{character_name}索要照片，就并返回指定格式的json信息。
 
-  1. 如果{user_name}没有索要照片，只需要回复对话。格式如下：
+  1. 如果{user_name}没有索要照片，请模仿{character_name}的语气回复{user_name}的对话。格式如下：
   <
-    "type":"reply_chat", 
-    "content":{character_name}想要回复的内容
+      "type":"reply_chat", 
+      "content":回复对话的内容
   >
   2. 如果{user_name}在索要照片，只需要返回以下信息。格式如下：
   <
-    "type":"send_image"
-    "content":"{nearest_user_chat}"
+      "type":"send_image"
+      "content":"{nearest_user_chat}"
   >
 
   ## 回复

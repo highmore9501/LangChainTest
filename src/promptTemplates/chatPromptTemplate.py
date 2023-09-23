@@ -24,20 +24,19 @@ class ChatPromptTemplate():
         self.prompt = PromptTemplate.from_template(commonChatPromptTemplate)
 
     def format(self, **kwargs) -> str:
-        character_name = kwargs["character_name"]
-        user_name = kwargs["user_name"]
         inputText = kwargs["nearest_user_chat"]
-
-        featured_chats = self.query_featured_chats(inputText)
-        kwargs["featured_chats"] = featured_chats
         # 查询最近的聊天内容
-        chat_historys = self.memory.load_memory_variables({})['history']
-
-        recent_chat_contents = self.format_recent_chat_contents(
-            chat_historys, character_name, user_name)
+        recent_chat_contents = self.memory.load_memory_variables({})[
+            'history']
         kwargs["recent_chat_contents"] = recent_chat_contents
-        result = self.format_prompt(**kwargs)
-        # 因为原模板中不能有{...:....}这样的格式，上面的代码会报错，但又需要这样的格式，所以模板用<...:...>代替{...:...}
+
+        # 查询长期记忆中与最近聊天内容相关的内容
+        query_text = recent_chat_contents + "\n" + inputText
+        featured_chats = self.query_featured_chats(query_text)
+        kwargs["featured_chats"] = featured_chats
+
+        result = self.prompt.format(**kwargs)
+        # 因为原模板中不能有{...:....}这样的格式，上面的代码会报错，但又需要这样的格式来表示json格式，所以模板用<...:...>代替{...:...}
         # 然后再用下面的代码将<...:...>替换成{...:...}
         result = result.replace("<", "{")
         result = result.replace(">", "}")
@@ -64,9 +63,8 @@ class ChatPromptTemplate():
         result = "\n".join(featured_chats)
         return result
 
-    def format_recent_chat_contents(self, chat_historys, user_name, character_name):
+    def format_recent_chat_contents(self, chat_historys):
         # 下面这个format_recent_chat_contents方法要根据前面已经设定好的token上限来提取聊天内容，超出上限的古早对话会被丢弃
-        # 然后将提取内容中的Human:和AI:替换成用户和ai人物的名字
         if len(chat_historys) < 2:
             return ""
 
@@ -81,7 +79,7 @@ class ChatPromptTemplate():
         # 如果last_two_elements_length < max_tokens，那么就把chat_historys_list最后两个元素加入到recent_chat_contents中
         while last_two_elements_length < max_tokens and len(chat_historys_list) > 1:
             recent_chat_contents = recent_chat_contents + "\n".join(
-                [chat_historys_list[-1], chat_historys_list[-2]])
+                [chat_historys_list[-2], chat_historys_list[-1]])+"\n"
             max_tokens -= last_two_elements_length
             chat_historys_list = chat_historys_list[:-2]
             if len(chat_historys_list) > 1:
