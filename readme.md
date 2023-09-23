@@ -4,7 +4,7 @@
 
 modelLoaders 里面是模型加载器
 
-promptGenerators 里面是 prompt 模板，目前只有一个常规对话模板
+promptGenerators 里面是 prompt 模板，目前有一个常规对话模板 common-chat.yaml，一个用于生成图片指令和回复对话的模板 chat-with-image.yaml
 
 settings/character 是人物设定 yaml 文件
 
