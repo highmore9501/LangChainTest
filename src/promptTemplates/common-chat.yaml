@@ -10,6 +10,9 @@ prompt: |-
   当时周边的环境：{environment}
   对话双方的关系：{user_name}是{character_name}的{identity}。{relationship_description} 
 
+  ### 相关知识
+  {relativeInfomation}
+
   ### 历史聊天记录
   {featured_chats}  
 

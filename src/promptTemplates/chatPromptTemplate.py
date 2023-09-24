@@ -32,7 +32,9 @@ class ChatPromptTemplate():
 
         # 查询长期记忆中与最近聊天内容相关的内容
         query_text = recent_chat_contents + "\n" + inputText
-        featured_chats = self.query_featured_chats(query_text)
+        relativeInfomation, featured_chats = self.query_featured_chats(
+            query_text)
+        kwargs["relativeInfomation"] = relativeInfomation
         kwargs["featured_chats"] = featured_chats
 
         result = self.prompt.format(**kwargs)
@@ -45,23 +47,38 @@ class ChatPromptTemplate():
     def query_featured_chats(self, inputText):
         # 查询长期记忆中与输入文本相似的内容，大小不要超过featured_chats_max_tokens
         max_tokens = self.featured_chats_max_tokens
-        historys = self.db.search(inputText, search_type="similarity", k=19)
-        page_contents = []
+        historys = self.db.search(inputText, search_type="mmr", k=19)
+        chat_contents = []
+        other_contents = []
         for histroy in historys:
-            page_contents.append(histroy.page_content)
+            # 如果history包含:，则认为是聊天记录，否则认为是其他内容
+            content = histroy.page_content
+            if ":" in histroy.page_content:
+                chat_contents.append(content)
+            else:
+                other_contents.append(content)
         # 去掉重复的内容
-        page_contents = list(set(page_contents))
+        chat_contents = list(set(chat_contents))
+        other_contents = list(set(other_contents))
         # 添加内容，限制在max_tokens以内
-        featured_chats = []
-        for content in page_contents:
-            max_tokens -= len(content)
+        relativeInfomation = ""
+        featured_chats = ""
+        # 反向遍历，添加相关背景信息
+        for other_content in other_contents[::-1]:
+            max_tokens -= len(other_content)
             if max_tokens <= 0:
                 break
             else:
-                featured_chats.append(content)
-        # 将featured_chats的元素用\n连接起来
-        result = "\n".join(featured_chats)
-        return result
+                relativeInfomation += other_content + "\n"
+        # 添加聊天记录
+        for chat_content in chat_contents[::-1]:
+            max_tokens -= len(chat_content)
+            if max_tokens <= 0:
+                break
+            else:
+                featured_chats += chat_content + "\n"
+
+        return relativeInfomation, featured_chats
 
     def format_recent_chat_contents(self, chat_historys):
         # 下面这个format_recent_chat_contents方法要根据前面已经设定好的token上限来提取聊天内容，超出上限的古早对话会被丢弃
