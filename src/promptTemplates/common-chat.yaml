@@ -1,31 +1,26 @@
 prompt: |-
-  ## 指令
-  下面有一场{character_name}与{user_name}之间的模拟谈话，做为一个ai助手，你需要根据背景信息和聊天记录，决定角色{character_name}接下来的回复内容。
+  ### 任务:
+  下面有一场{character_name}与{user_name}之间的模拟谈话，你的任务是：
+  - 根据下面的对话背景信息和相关知识，了解对话双方的背景信息。
+  - 根据历史聊天记录，学习{character_name}的语言习惯。
+  - 根据最近的聊天内容，为{character_name}生成回复{user_name}的话，以完成对话。
+  - 回复的格式是：<"type":"reply_chat", "content":回复对话的内容>
+  - 不要输出多余的内容，只输出回复的内容。
 
-  ### 对话的背景信息
+  #### 对话的背景信息
   {character_name}的人物介绍：{character_persona}
   {user_name}的人物介绍：{user_persona}
   对话的时间：{time}
   对话的地点：{location}
   当时周边的环境：{environment}
   对话双方的关系：{user_name}是{character_name}的{identity}。{relationship_description} 
-
-  ### 相关知识
+  #### 相关知识
   {relativeInfomation}
-
-  ### 历史聊天记录
+  #### 历史聊天记录
   {featured_chats}  
-
-  ### 正在进行的聊天内容
+  #### 最近的聊天内容
   {recent_chat_contents}
   {user_name}：{nearest_user_chat}
 
-  ### 回复方式说明
-  现在需要你根据{user_name}刚刚说的话，模仿{character_name}的语气回复{user_name}的对话。格式如下：
-  <
-      "type":"reply_chat", 
-      "content":回复对话的内容
-  >
-
-  ## 回复
-  现在，你的回复是：
+  ### 生成回复:
+  现在，你为{character_name}生成的回复是：
