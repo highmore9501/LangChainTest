@@ -8,6 +8,8 @@ def pharseAnswer(answer):
     answer = answer.replace("\n", "")
     # 去掉answer中的空格
     answer = answer.replace(" ", "")
+    # 去掉answer中的\
+    answer = answer.replace("\\", "")
     # 如果answer不包含{，那么可以假定answer是聊天内容，直接返回
     if "{" not in answer:
         return ["reply_chat", answer]
