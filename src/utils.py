@@ -25,13 +25,17 @@ def generate_character_feature_chats(character_name: str):
     if not os.path.exists(persist_directory):
         os.makedirs(persist_directory)
 
-    embedding = HuggingFaceEmbeddings()
+    huggingfaceModel = "moka-ai/m3e-base"
+    embeddings = HuggingFaceEmbeddings(model_name=huggingfaceModel)
+
     vectordb = Chroma.from_documents(
-        documents=docs, embedding=embedding, persist_directory=persist_directory)
+        documents=docs, embedding=embeddings, persist_directory=persist_directory)
     # 使用vectordb持久化，也就是保存到db文件夹下
     vectordb.persist()
     vectordb = None
 
 
 if __name__ == "__main__":
-    generate_character_feature_chats("韦小宝")
+    characters = ['凉宫春日', '神里绫华', '韦小宝']
+    for character in characters:
+        generate_character_feature_chats(character)
